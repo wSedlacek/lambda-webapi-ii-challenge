@@ -2,7 +2,7 @@ import { Config } from 'knex';
 
 export const development: Config = {
   client: 'sqlite3',
-  connection: { filename: './data/lambda.db3' },
+  connection: { filename: './src/data/lambda.db' },
   useNullAsDefault: true,
   pool: {
     afterCreate: (conn, done) => {
@@ -10,8 +10,8 @@ export const development: Config = {
     },
   },
   migrations: {
-    directory: './data/migrations',
+    directory: './src/data/migrations',
     tableName: 'dbmigrations',
   },
-  seeds: { directory: './data/seeds' },
+  seeds: { directory: './src/data/seeds' },
 };
