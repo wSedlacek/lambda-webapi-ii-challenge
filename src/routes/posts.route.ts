@@ -3,26 +3,10 @@ import express from 'express';
 import { CommentDTO, PostDTO } from '../models';
 
 import { find, findByID, insert, update, remove } from '../data/db';
-import { findPostComments, findCommentById, insertComment } from '../data/db';
-import { validComment, validPost, validID } from '../validate';
+import { findPostComments, insertComment } from '../data/db';
+import { validateComment, validatePost, validateID } from '../validate';
 
 export const postsRouter = express.Router();
-
-const validateID = async (req: express.Request, res: express.Response) => {
-  if (!(await validID(req.params.id))) {
-    res.status(404).json({ message: 'The post with the specified ID does not exist.' });
-    return false;
-  }
-  return true;
-};
-
-const validatePost = (req: express.Request, res: express.Response) => {
-  if (!validPost(req.body)) {
-    res.status(400).json({ errorMessage: 'Please provide title and contents for the post.' });
-    return false;
-  }
-  return true;
-};
 
 postsRouter.get('/', async (req, res) => {
   try {
@@ -37,6 +21,7 @@ postsRouter.get('/', async (req, res) => {
 postsRouter.post('/', async (req, res) => {
   try {
     if (!validatePost(req, res)) return;
+
     const post = await insert(req.body as PostDTO);
     res.status(201).json(post);
   } catch (error) {
@@ -48,6 +33,7 @@ postsRouter.post('/', async (req, res) => {
 postsRouter.get('/:id', async (req, res) => {
   try {
     if (!(await validateID(req, res))) return;
+
     const post = await findByID(req.params.id);
     res.status(200).json(post);
   } catch (error) {
@@ -60,6 +46,7 @@ postsRouter.put('/:id', async (req, res) => {
   try {
     if (!(await validateID(req, res))) return;
     if (!validatePost(req, res)) return;
+
     const post = await update(req.params.id, req.body);
     res.status(200).json(post);
   } catch (error) {
@@ -71,6 +58,7 @@ postsRouter.put('/:id', async (req, res) => {
 postsRouter.delete('/:id', async (req, res) => {
   try {
     if (!(await validateID(req, res))) return;
+
     const post = await remove(req.params.id);
     res.status(200).send(post);
   } catch (error) {
@@ -79,5 +67,25 @@ postsRouter.delete('/:id', async (req, res) => {
   }
 });
 
-postsRouter.get('/:id/comments', async (req, res) => {});
-postsRouter.post('/:id/comments', async (req, res) => {});
+postsRouter.get('/:id/comments', async (req, res) => {
+  try {
+    if (!(await validateID(req, res))) return;
+
+    const comments = await findPostComments(req.params.id);
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).json({ error: 'The comments information could not be retrieved.' });
+  }
+});
+
+postsRouter.post('/:id/comments', async (req, res) => {
+  try {
+    if (!(await validateID(req, res))) return;
+    if (!validateComment(req, res)) return;
+
+    const comment = await insertComment({ ...req.body, post_id: req.params.id } as CommentDTO);
+    res.status(201).json(comment);
+  } catch (error) {
+    res.status(500).json({ error: 'There was an error while saving the comment to the database' });
+  }
+});

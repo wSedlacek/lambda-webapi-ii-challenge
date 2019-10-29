@@ -34,9 +34,9 @@ export const remove = async (id: string | number) => {
 };
 
 export const findPostComments = async (postId: string | number) =>
-  await db('comments')
-    .join('posts', 'posts.id', 'post_id')
-    .select('comments.*', 'title as post')
+  await db<CommentDTO>('comments')
+    .join<PostDTO>('posts', 'posts.id', 'post_id')
+    .select<CommentDTO[]>('comments.*', 'title as post')
     .where('post_id', postId);
 
 export const findCommentById = async (id: string | number) =>
@@ -45,7 +45,9 @@ export const findCommentById = async (id: string | number) =>
     .select<CommentDTO>('comments.*', 'title as post')
     .where('comments.id', id);
 
-export const insertComment = async (comment: CommentDTO) =>
-  await db<CommentDTO>('comments')
+export const insertComment = async (comment: CommentDTO) => {
+  const id = await db<CommentDTO>('comments')
     .insert(comment)
-    .then((ids) => ({ id: ids[0] }));
+    .then((ids) => ids[0]);
+  return await findCommentById(id);
+};
