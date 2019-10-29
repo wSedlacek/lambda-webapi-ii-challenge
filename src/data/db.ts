@@ -6,7 +6,7 @@ const db = knex(development);
 
 export const find = async () => await db<PostDTO>('posts');
 
-export const findById = async (id: string | number) =>
+export const findByID = async (id: string | number) =>
   await db<PostDTO>('posts')
     .where({ id })
     .first();
@@ -15,18 +15,23 @@ export const insert = async (post: PostDTO) => {
   const id = await db<PostDTO>('posts')
     .insert(post)
     .then((ids) => ids[0]);
-  return await findById(id);
+  return await findByID(id);
 };
 
-export const update = async (id: string | number, post: PostDTO) =>
+export const update = async (id: string | number, post: PostDTO) => {
   await db<PostDTO>('posts')
     .where('id', id)
     .update(post);
+  return await findByID(id);
+};
 
-export const remove = async (id: string | number) =>
+export const remove = async (id: string | number) => {
+  const post = await findByID(id);
   await db<PostDTO>('posts')
     .where('id', id)
     .del();
+  return post;
+};
 
 export const findPostComments = async (postId: string | number) =>
   await db('comments')
