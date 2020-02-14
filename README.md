@@ -90,7 +90,7 @@ When the client makes a `POST` request to `/api/posts`:
 
   - cancel the request.
   - respond with HTTP status code `400` (Bad Request).
-  - return the following JSON response: `{ errorMessage: "Please provide title and contents for the post." }`.
+  - return the following JSON response: `{ error: "Please provide title and contents for the post." }`.
 
 - If the information about the _post_ is valid:
 
@@ -114,7 +114,7 @@ When the client makes a `POST` request to `/api/posts/:id/comments`:
 
   - cancel the request.
   - respond with HTTP status code `400` (Bad Request).
-  - return the following JSON response: `{ errorMessage: "Please provide text for the comment." }`.
+  - return the following JSON response: `{ error: "Please provide text for the comment." }`.
 
 - If the information about the _comment_ is valid:
 
@@ -181,7 +181,7 @@ When the client makes a `PUT` request to `/api/posts/:id`:
 
   - cancel the request.
   - respond with HTTP status code `400` (Bad Request).
-  - return the following JSON response: `{ errorMessage: "Please provide title and contents for the post." }`.
+  - return the following JSON response: `{ error: "Please provide title and contents for the post." }`.
 
 - If there's an error when updating the _post_:
 

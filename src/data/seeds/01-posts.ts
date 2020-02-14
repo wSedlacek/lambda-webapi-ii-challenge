@@ -1,11 +1,12 @@
-exports.seed = function(knex, Promise) {
-  return knex('posts')
+import Knex from 'knex';
+
+export const seed = (knex: Knex, _: Promise<any>) =>
+  knex('posts')
     .truncate()
     .then(function() {
       return knex('posts').insert([
         {
-          title:
-            'I wish the ring had never come to me. I wish none of this had happened.',
+          title: 'I wish the ring had never come to me. I wish none of this had happened.',
           contents: 'Guess who said this',
         },
         {
@@ -23,13 +24,11 @@ exports.seed = function(knex, Promise) {
           contents: 'Guess who said this',
         },
         {
-          title:
-            'You need people of intelligence on this sort of mission...quest...thing.',
+          title: 'You need people of intelligence on this sort of mission...quest...thing.',
           contents: 'Guess who said this',
         },
         {
-          title:
-            'All you have to do is decide what to do with the time that is given to you.',
+          title: 'All you have to do is decide what to do with the time that is given to you.',
           contents: 'Guess who said this',
         },
         {
@@ -38,15 +37,12 @@ exports.seed = function(knex, Promise) {
           contents: 'Guess who said this',
         },
         {
-          title:
-            ' Fool of a Took! Throw yourself in next time and rid us of your stupidity!',
+          title: ' Fool of a Took! Throw yourself in next time and rid us of your stupidity!',
           contents: 'Guess who said this',
         },
         {
-          title:
-            'I will be dead before I see the ring in the hands of an elf! Never trust an elf!',
+          title: 'I will be dead before I see the ring in the hands of an elf! Never trust an elf!',
           contents: 'Guess who said this',
         },
       ]);
     });
-};
